@@ -48,7 +48,7 @@ func auditFixture(t *testing.T, extraFiles ...int) (*GitRepository, *inventorySt
 	if err != nil {
 		t.Fatal(err)
 	}
-	spec := auditSpec{Plan: plan, Model: auditModelConfig{Harness: "codex", Model: "test-model", Effort: "high", Binary: "/bin/true", Timeout: time.Second}, PromptVersion: auditPromptVersion, Instructions: "Inspect ownership."}
+	spec := auditSpec{Plan: plan, Model: auditModelConfig{Harness: "codex", Model: "test-model", Effort: "high", Binary: testTrueBinary, Timeout: time.Second}, PromptVersion: auditPromptVersion, Instructions: "Inspect ownership."}
 	inputs, err := prepareAuditInputs(ctx, record, spec)
 	if err != nil {
 		t.Fatal(err)
@@ -379,7 +379,7 @@ func TestAuditCLIWorkflowAndUnableCoverage(t *testing.T) {
 	ctx := context.Background()
 	var stdout, stderr bytes.Buffer
 	environment := cliEnvironment{Cwd: directory, Stdout: &stdout, Stderr: &stderr}
-	args := []string{"scan", "create", "--model", "fixture-model", "--binary", "/bin/true", "--path", "pcbnew", "--max-files", "1", "--json"}
+	args := []string{"scan", "create", "--model", "fixture-model", "--binary", testTrueBinary, "--path", "pcbnew", "--max-files", "1", "--json"}
 	if err := runReposeCLI(ctx, args, environment); err == nil {
 		t.Fatal("unapproved inventory accepted")
 	}

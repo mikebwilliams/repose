@@ -47,7 +47,7 @@ func TestReposePromptAndHintsFreezeIntoScan(t *testing.T) {
 
 	stdout.Reset()
 	environment.Stdin = nil
-	createArgs := []string{"scan", "create", "--model", "fixture-model", "--binary", "/bin/true", "--path", "pcbnew", "--max-files", "1", "--hint", "Inspect exception paths.", "--json"}
+	createArgs := []string{"scan", "create", "--model", "fixture-model", "--binary", testTrueBinary, "--path", "pcbnew", "--max-files", "1", "--hint", "Inspect exception paths.", "--json"}
 	if err := runReposeCLI(ctx, createArgs, environment); err != nil {
 		t.Fatal(err)
 	}
@@ -125,7 +125,7 @@ func TestReposeRecheckFreezesCurrentPromptAndHints(t *testing.T) {
 
 	stdout.Reset()
 	environment.Stdin = nil
-	args := []string{"recheck", "--scan", source.ID, "--model", "verifier", "--binary", "/bin/true", "--hint", "Check feature guards.", "--create-only", "--json"}
+	args := []string{"recheck", "--scan", source.ID, "--model", "verifier", "--binary", testTrueBinary, "--hint", "Check feature guards.", "--create-only", "--json"}
 	if err := runReposeCLI(ctx, args, environment); err != nil {
 		t.Fatal(err)
 	}
