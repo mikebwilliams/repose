@@ -278,7 +278,7 @@ func TestAuditCLIRejectsInvalidTimeouts(t *testing.T) {
 		calls.Add(1)
 		return auditInvocation{}, nil
 	}}
-	for _, args := range [][]string{{"scan", "create", "--model", "test-model", "--binary", "/bin/true"}, {"scan", "run", scan.ID}, {"scan", "resume"}} {
+	for _, args := range [][]string{{"scan", "create", "--model", "test-model", "--binary", testTrueBinary}, {"scan", "run", scan.ID}, {"scan", "resume"}} {
 		for _, timeout := range []string{"0", "-1s", "invalid"} {
 			command := append(append([]string{}, args...), "--timeout", timeout)
 			if err := runReposeCLI(ctx, command, env); err == nil {

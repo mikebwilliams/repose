@@ -157,7 +157,7 @@ func TestAuditFindingTagCLIListsAndFilters(t *testing.T) {
 		t.Fatalf("HTML tags: %+v", html.Findings)
 	}
 	stdout.Reset()
-	if err := runReposeCLI(ctx, []string{"recheck", "--repo", repository.WorkTree, "--scan", scan.ID, "--model", "verifier", "--binary", "/bin/true", "--tag", "crash", "--dry-run", "--json"}, environment); err != nil {
+	if err := runReposeCLI(ctx, []string{"recheck", "--repo", repository.WorkTree, "--scan", scan.ID, "--model", "verifier", "--binary", testTrueBinary, "--tag", "crash", "--dry-run", "--json"}, environment); err != nil {
 		t.Fatal(err)
 	}
 	var preview struct {

@@ -120,7 +120,7 @@ func TestAuditRecheckWorkflowResumeAndHistory(t *testing.T) {
 		}
 		return auditRecheckTestRunner(ctx, c, p)
 	}}
-	args := []string{"recheck", "--model", "verifier", "--binary", "/bin/true", "--effort", "xhigh", "--jobs", "2", "--limit", "2", "--json"}
+	args := []string{"recheck", "--model", "verifier", "--binary", testTrueBinary, "--effort", "xhigh", "--jobs", "2", "--limit", "2", "--json"}
 	invoke := func(args []string) auditScan {
 		t.Helper()
 		stdout.Reset()
@@ -291,7 +291,7 @@ func TestAuditRecheckCodexReceivesVerificationSchema(t *testing.T) {
 		output, _ := json.Marshal(auditRecheckBatchOutput{Results: []auditRecheckOutput{{FindingID: findings[0].ID, Outcome: "confirmed", Reason: "fixture evidence"}}})
 		return exec.CommandContext(ctx, "sh", "-c", `cat >/dev/null; printf '%s' "$1" > "$2"; printf '%s\n' '{"type":"turn.completed"}'`, "fixture", string(output), result)
 	}}
-	args := []string{"recheck", fmt.Sprint(findings[0].ID), "--scan", source.ID, "--model", "verifier", "--binary", "/bin/true", "--json"}
+	args := []string{"recheck", fmt.Sprint(findings[0].ID), "--scan", source.ID, "--model", "verifier", "--binary", testTrueBinary, "--json"}
 	if err := runReposeCLI(ctx, args, env); err != nil {
 		t.Fatal(err)
 	}
@@ -326,7 +326,7 @@ func TestAuditRecheckV4DryRunAndMigration(t *testing.T) {
 		calls.Add(1)
 		return auditInvocation{}, errors.New("unexpected model call")
 	}}
-	args := []string{"recheck", "--model", "verifier", "--binary", "/bin/true", "--json"}
+	args := []string{"recheck", "--model", "verifier", "--binary", testTrueBinary, "--json"}
 	if err := runReposeCLI(ctx, append(append([]string{}, args...), "--dry-run"), env); err != nil {
 		t.Fatal(err)
 	}
@@ -379,7 +379,7 @@ func TestAuditRecheckSelectionAndSnapshotGuards(t *testing.T) {
 		calls.Add(1)
 		return auditRecheckTestRunner(ctx, c, p)
 	}}
-	base := []string{"recheck", "--scan", source.ID, "--model", "verifier", "--binary", "/bin/true", "--create-only", "--json"}
+	base := []string{"recheck", "--scan", source.ID, "--model", "verifier", "--binary", testTrueBinary, "--create-only", "--json"}
 	for _, extra := range [][]string{
 		{"999999"}, {fmt.Sprint(findings[0].ID), fmt.Sprint(findings[0].ID)},
 		{"--path", "../escape"}, {"--path", "not-in-scan"}, {"--timeout", "0"}, {"--jobs", "33"}, {"--model", ""},
@@ -486,7 +486,7 @@ func TestAuditRecheckBatchesParallelLimitAndResume(t *testing.T) {
 		}
 		return auditRecheckTestRunner(ctx, c, p)
 	}}
-	args := []string{"recheck", "--model", "verifier", "--binary", "/bin/true", "--jobs", "2", "--limit", "2", "--json"}
+	args := []string{"recheck", "--model", "verifier", "--binary", testTrueBinary, "--jobs", "2", "--limit", "2", "--json"}
 	done := make(chan error, 1)
 	go func() { done <- runReposeCLI(ctx, args, env) }()
 	for range 2 {

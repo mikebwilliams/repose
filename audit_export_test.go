@@ -21,7 +21,7 @@ func TestAuditExportFormatsWithVerificationHistory(t *testing.T) {
 	var recheck auditScan
 	for _, model := range []string{"verifier", "second-verifier"} {
 		stdout.Reset()
-		if err := runReposeCLI(ctx, []string{"recheck", "--repo", repo.WorkTree, "--scan", source.ID, "--model", model, "--binary", "/bin/true", "--json"}, env); err != nil {
+		if err := runReposeCLI(ctx, []string{"recheck", "--repo", repo.WorkTree, "--scan", source.ID, "--model", model, "--binary", testTrueBinary, "--json"}, env); err != nil {
 			t.Fatal(err)
 		}
 		if err := json.Unmarshal(stdout.Bytes(), &recheck); err != nil || recheck.Status != "completed" {

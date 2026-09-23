@@ -11,7 +11,10 @@ import (
 
 func newTestGitRepository(t *testing.T) (*GitRepository, string) {
 	t.Helper()
-	directory := t.TempDir()
+	directory, err := filepath.EvalSymlinks(t.TempDir())
+	if err != nil {
+		t.Fatalf("EvalSymlinks: %v", err)
+	}
 	testGit(t, directory, "init", "-b", "master")
 	testGit(t, directory, "config", "user.name", "AIR Test")
 	testGit(t, directory, "config", "user.email", "air-test@example.invalid")
@@ -52,4 +55,19 @@ func testGit(t *testing.T, directory string, args ...string) string {
 		t.Fatalf("git %s: %v\n%s", strings.Join(args, " "), err, output)
 	}
 	return string(output)
+}
+
+// Absolute path to `true`
+var testTrueBinary = func() string {
+	if path, err := exec.LookPath("true"); err == nil && filepath.IsAbs(path) {
+		return path
+	}
+	return "/bin/true"
+}()
+
+func TestMain(m *testing.M) {
+	// GIT_EDITOR overrides the core.editor that tests configure; some
+	// environments (e.g. editor-integrated terminals) set it globally.
+	os.Unsetenv("GIT_EDITOR")
+	os.Exit(m.Run())
 }
